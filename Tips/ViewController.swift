@@ -18,13 +18,36 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tipControl: UISegmentedControl!
     
+    var intValue = 1
+    var justLoaded = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
+        
+        tipControl.setEnabled(true, forSegmentAtIndex: intValue)
+        
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if (!justLoaded) {
+            intValue = defaults.integerForKey("default_tip")
+        }
+        else {
+            justLoaded = false
+
+        }
+        tipControl.setEnabled(true, forSegmentAtIndex: intValue)
+        
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -32,9 +55,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onEditingChanged(sender: AnyObject) {
-        let tipPercentages = [ 0.18, 0.2, 0.22, 0.25 ]
-        
-        let tipPercent = tipPercentages[tipControl.selectedSegmentIndex]
+        let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
         
         let billAmount = NSString(string: billField.text!).doubleValue
         let tip = billAmount * tipPercent
@@ -45,6 +66,13 @@ class ViewController: UIViewController {
         
     }
 
+    func getTipPercentage(index: Int) -> Double {
+        let tipPercentages = [ 0.18, 0.2, 0.22, 0.25 ]
+        
+        return tipPercentages[index]
+        
+    }
+    
     @IBAction func onTap(sender: AnyObject) {
         view.endEditing(true)
     }
