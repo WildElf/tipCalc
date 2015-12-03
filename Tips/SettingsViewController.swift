@@ -35,6 +35,8 @@ class SettingsViewController: UIViewController {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setInteger(defaultTipControl.selectedSegmentIndex, forKey: "default_tip")
         defaults.synchronize()
+        
+        print(defaults.integerForKey("default_tip"))
 
     }
     
@@ -44,6 +46,8 @@ class SettingsViewController: UIViewController {
         defaults.synchronize()
 
         segue.sourceViewController
+        
+        print(defaults.integerForKey("default_tip"))
     }
 
     /*
