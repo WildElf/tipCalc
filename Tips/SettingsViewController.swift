@@ -12,6 +12,8 @@ class SettingsViewController: UIViewController {
 
     @IBOutlet weak var defaultTipControl: UISegmentedControl!
     
+    var defaults = NSUserDefaults.standardUserDefaults()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,16 +25,12 @@ class SettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-    
+    override func viewWillAppear(animated: Bool) {
+        defaultTipControl.selectedSegmentIndex = defaults.integerForKey("default_tip")
     }
-
-    
 
     @IBAction func onDefaultChanged(sender: AnyObject) {
         
-        let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setInteger(defaultTipControl.selectedSegmentIndex, forKey: "default_tip")
         defaults.synchronize()
         
@@ -42,7 +40,6 @@ class SettingsViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        let defaults = NSUserDefaults.standardUserDefaults()
         defaults.synchronize()
 
         segue.sourceViewController

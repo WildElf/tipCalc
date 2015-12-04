@@ -18,8 +18,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tipControl: UISegmentedControl!
     
-    var intValue = 1
-    var justLoaded = true
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
+    var intValue = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,23 +29,18 @@ class ViewController: UIViewController {
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
         
-        tipControl.setEnabled(true, forSegmentAtIndex: intValue)
-        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-        if (!justLoaded) {
+        if (defaults.boolForKey("default_tip")) {
             intValue = defaults.integerForKey("default_tip")
         }
-        else {
-            justLoaded = false
-
-        }
-        tipControl.setEnabled(true, forSegmentAtIndex: intValue)
+        
+        print(defaults.integerForKey("default_tip"))
+        
+        tipControl.selectedSegmentIndex = intValue
         
     }
 
