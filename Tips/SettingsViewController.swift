@@ -26,7 +26,12 @@ class SettingsViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        
         defaultTipControl.selectedSegmentIndex = defaults.integerForKey("default_tip")
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+
     }
 
     @IBAction func onDefaultChanged(sender: AnyObject) {
@@ -39,11 +44,10 @@ class SettingsViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        defaults.synchronize()
 
-        segue.sourceViewController
+        defaults.synchronize()
         
+        print("IN SEGUE")
         print(defaults.integerForKey("default_tip"))
     }
 

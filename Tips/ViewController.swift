@@ -30,20 +30,26 @@ class ViewController: UIViewController {
         totalLabel.text = "$0.00"
         
     }
-    
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+    
+        print("Will appear")
         
         if (defaults.boolForKey("default_tip")) {
             intValue = defaults.integerForKey("default_tip")
+            
+            print("Found default tip")
+            print(intValue)
         }
-        
+
         print(defaults.integerForKey("default_tip"))
         
         tipControl.selectedSegmentIndex = intValue
         
-    }
+        updateLabels()
 
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -51,6 +57,24 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onEditingChanged(sender: AnyObject) {
+        updateLabels()
+    }
+
+    func getTipPercentage(index: Int) -> Double {
+        if (index >= 0)
+        {
+            let tipPercentages = [ 0.18, 0.2, 0.22, 0.25 ]
+            
+            return tipPercentages[index]
+        }
+        else
+        {
+            return (100.0)
+        }
+    }
+    
+    func updateLabels()
+    {
         let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
         
         let billAmount = NSString(string: billField.text!).doubleValue
@@ -59,19 +83,13 @@ class ViewController: UIViewController {
         
         tipLabel.text = String (format: "$%.2f", tip)
         totalLabel.text = String (format: "$%.2f", total)
-        
-    }
 
-    func getTipPercentage(index: Int) -> Double {
-        let tipPercentages = [ 0.18, 0.2, 0.22, 0.25 ]
-        
-        return tipPercentages[index]
-        
     }
     
     @IBAction func onTap(sender: AnyObject) {
         view.endEditing(true)
     }
+
     
 }
 
