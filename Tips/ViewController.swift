@@ -21,10 +21,16 @@ class ViewController: UIViewController {
     let defaults = NSUserDefaults.standardUserDefaults()
     
     var intValue = -1
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+
+        if (NSDate().timeIntervalSinceDate(defaults.objectForKey("time_closed") as! NSDate) < 600)
+        {
+            billField.text = defaults.objectForKey("recent_bill") as! String
+            
+        }
 
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
@@ -36,7 +42,7 @@ class ViewController: UIViewController {
     
         print("Will appear")
         
-        if (defaults.boolForKey("default_tip")) {
+        if (defaults.objectForKey("default_tip") != nil) {
             intValue = defaults.integerForKey("default_tip")
             
             print("Found default tip")
@@ -69,20 +75,32 @@ class ViewController: UIViewController {
         }
         else
         {
-            return (100.0)
+            return (0.0)
         }
     }
     
     func updateLabels()
     {
         let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
+        /*
+        if (defaults.stringForKey("recent_bill") != nil)
+        {
+            let billAmount = NSString(string: billField.text!).doubleValue
+        }
+        else
+        { */
+            let billAmount = NSString(string: billField.text!).doubleValue
+//        }
         
-        let billAmount = NSString(string: billField.text!).doubleValue
         let tip = billAmount * tipPercent
         let total = billAmount + tip
         
         tipLabel.text = String (format: "$%.2f", tip)
         totalLabel.text = String (format: "$%.2f", total)
+
+        defaults.setValue(billField.text!, forKey: "recent_bill")
+        
+        defaults.synchronize()
 
     }
     
