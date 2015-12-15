@@ -28,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let closingTime = NSDate()
         
         defaults.setValue(closingTime, forKey: "time_closed")
+        
+        defaults.synchronize()
 
 
     }
@@ -39,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let closingTime = NSDate()
         
         defaults.setValue(closingTime, forKey: "time_closed")
+
+        defaults.synchronize()
 
     }
 
@@ -58,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let closingTime = NSDate()
         
         defaults.setValue(closingTime, forKey: "time_closed")
+
+        defaults.synchronize()
 
     }
 

@@ -20,12 +20,15 @@ class ViewController: UIViewController {
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
+    // sets segmented control to unselected as a default
     var intValue = -1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
+        // compare stored closing date to now
+        // and use if less than 10 minutes
         if (NSDate().timeIntervalSinceDate(defaults.objectForKey("time_closed") as! NSDate) < 600)
         {
             billField.text = defaults.objectForKey("recent_bill") as! String
@@ -42,6 +45,7 @@ class ViewController: UIViewController {
     
         print("Will appear")
         
+        // loads default tip setting, if it has been set
         if (defaults.objectForKey("default_tip") != nil) {
             intValue = defaults.integerForKey("default_tip")
             
@@ -51,10 +55,18 @@ class ViewController: UIViewController {
 
         print(defaults.integerForKey("default_tip"))
         
+        // uses the default value, using -1 if none exists
         tipControl.selectedSegmentIndex = intValue
         
         updateLabels()
 
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        // set bill field to first responder
+        // autoload the keyboard
+        billField.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,6 +78,7 @@ class ViewController: UIViewController {
         updateLabels()
     }
 
+    // store the segment values/array in its own function
     func getTipPercentage(index: Int) -> Double {
         if (index >= 0)
         {
@@ -73,24 +86,19 @@ class ViewController: UIViewController {
             
             return tipPercentages[index]
         }
-        else
+        else // in case of -1
         {
             return (0.0)
         }
     }
     
+    // function to use anytime data may have changed
     func updateLabels()
     {
+        // pass the segment control to the percentage func
         let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
-        /*
-        if (defaults.stringForKey("recent_bill") != nil)
-        {
-            let billAmount = NSString(string: billField.text!).doubleValue
-        }
-        else
-        { */
-            let billAmount = NSString(string: billField.text!).doubleValue
-//        }
+        
+        let billAmount = NSString(string: billField.text!).doubleValue
         
         let tip = billAmount * tipPercent
         let total = billAmount + tip
@@ -98,12 +106,14 @@ class ViewController: UIViewController {
         tipLabel.text = String (format: "$%.2f", tip)
         totalLabel.text = String (format: "$%.2f", total)
 
+        // store the latest bill entry for later
         defaults.setValue(billField.text!, forKey: "recent_bill")
         
         defaults.synchronize()
 
     }
     
+    // close the keyboard upon taking any part of the screen
     @IBAction func onTap(sender: AnyObject) {
         view.endEditing(true)
     }

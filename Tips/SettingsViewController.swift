@@ -27,6 +27,7 @@ class SettingsViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         
+        // set the segment to the last stored default
         defaultTipControl.selectedSegmentIndex = defaults.integerForKey("default_tip")
     }
     
@@ -36,6 +37,7 @@ class SettingsViewController: UIViewController {
 
     @IBAction func onDefaultChanged(sender: AnyObject) {
         
+        // create/update the default selection
         defaults.setInteger(defaultTipControl.selectedSegmentIndex, forKey: "default_tip")
         defaults.synchronize()
         
