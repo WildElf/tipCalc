@@ -33,7 +33,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Challenges encountered:
 
 Finding the function call to modify a UI segmented control from the program was
 rather tricky. Apple's documentation seemed bereft of any answers. Proposed solutions 
