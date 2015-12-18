@@ -18,6 +18,13 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tipControl: UISegmentedControl!
     
+    @IBOutlet weak var billText: UILabel!
+    
+    @IBOutlet weak var tipText: UILabel!
+    
+    @IBOutlet weak var totalText: UILabel!
+    
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     
     // sets segmented control to unselected as a default
@@ -31,12 +38,35 @@ class ViewController: UIViewController {
         // and use if less than 10 minutes
         if (NSDate().timeIntervalSinceDate(defaults.objectForKey("time_closed") as! NSDate) < 600)
         {
-            billField.text = defaults.objectForKey("recent_bill") as! String
+            billField.text = (defaults.objectForKey("recent_bill") as! String)
             
         }
+        
+        let cgHeight = billField.frame.height
+        let cgWidth = billField.frame.width
+        let cgX = billField.frame.origin.x
+        let cgY = billField.frame.origin.y
+        
+
+        billField.frame.insetInPlace(dx: 3, dy: 5)
+        
+        print("X " + cgX.description + " Y " + cgY.description)
+        print("Height " + (cgHeight.description))
+        print("Width " + (cgWidth.description))
 
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
+        
+        if (billField.text == "")
+        {
+            alphaModify(0)
+            growBillField(true)
+        }
+        else
+        {
+            alphaModify(1)
+            growBillField(true)
+        }
         
     }
 
@@ -76,6 +106,25 @@ class ViewController: UIViewController {
 
     @IBAction func onEditingChanged(sender: AnyObject) {
         updateLabels()
+        
+        if (billField.text == "")
+        {
+            UIView.animateWithDuration(1.0, animations:
+                {
+                    self.alphaModify(0)
+                    self.growBillField(true)
+            })
+        }
+        else
+        {
+            UIView.animateWithDuration(1.0, animations:
+                {
+                    self.alphaModify(1)
+                    self.growBillField(false)
+            })
+            
+        }
+        
     }
 
     // store the segment values/array in its own function
@@ -118,6 +167,30 @@ class ViewController: UIViewController {
         view.endEditing(true)
     }
 
+    func alphaModify(newAlpha: CGFloat)
+    {
+        tipLabel.alpha = newAlpha
+        totalLabel.alpha = newAlpha
+        tipControl.alpha = newAlpha
+        billText.alpha = newAlpha
+        tipText.alpha = newAlpha
+        totalText.alpha = newAlpha
+    }
+    
+    func growBillField(grow: Bool)
+    {
+        let normRect = CGRect(x: 176, y: 79, width: 30, height: 124)
+        let largetRect = CGRect(x: 176, y: 79, width: 90, height: 372)
+
+        if (grow)
+        {
+            billField.drawRect(largetRect)
+        }
+        else
+        {
+            billField.drawRect(normRect)
+        }
+    }
     
 }
 
