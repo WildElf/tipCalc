@@ -113,6 +113,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="barDivider" destination="zEp-zP-4B3" id="Qxx-Hn-fNR"/>
                         <outlet property="billField" destination="QmF-4i-QC3" id="9Lc-k7-EWE"/>
                         <outlet property="billText" destination="c1Q-mP-L4R" id="bjD-mw-UU8"/>
                         <outlet property="tipControl" destination="UxT-a5-p1Y" id="8xf-TC-AeN"/>
