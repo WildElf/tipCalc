@@ -36,7 +36,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-
+        
         // compare stored closing date to now
         // and use if less than 10 minutes
         if (NSDate().timeIntervalSinceDate(defaults.objectForKey("time_closed") as! NSDate) < 600)
@@ -45,32 +45,9 @@ class ViewController: UIViewController {
             
         }
         
-        let cgHeight = billField.frame.height
-        let cgWidth = billField.frame.width
-        let cgX = billField.frame.origin.x
-        let cgY = billField.frame.origin.y
-        
-
-        billField.frame.insetInPlace(dx: 3, dy: 5)
-        
-        print("X " + cgX.description + " Y " + cgY.description)
-        print("Height " + (cgHeight.description))
-        print("Width " + (cgWidth.description))
-
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
-        
-        if (billField.text == "")
-        {
-            alphaModify(0)
-            growBillField(true)
-        }
-        else
-        {
-            alphaModify(1)
-            growBillField(true)
-        }
-        
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -108,31 +85,9 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onEditingChanged(sender: AnyObject) {
+        
         updateLabels()
-        
-        if (billField.text == "")
-        {
-            makePrefix()
-        }
-        
-        if (billField.text == "$" && normalSize)
-        {
-            UIView.animateWithDuration(1.0, animations:
-                {
-                    self.alphaModify(0)
-                    self.growBillField(true)
-            })
-        }
-        else
-        {
-            UIView.animateWithDuration(1.0, animations:
-                {
-                    self.alphaModify(1)
-                    self.growBillField(false)
-            })
-            
-        }
-        
+
     }
     
     // $ prefix for billField
@@ -162,19 +117,18 @@ class ViewController: UIViewController {
     // function to use anytime data may have changed
     func updateLabels()
     {
-        if (billField.text == "")
-        {
-            makePrefix()
-        }
         
         // pass the segment control to the percentage func
         let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
         
         let billAmount = NSString(string: billField.text!).doubleValue
         
+        print("billField: \(billField.text!)")
+        print("billAmount: \(billAmount)")
+        
         let tip = billAmount * tipPercent
         let total = billAmount + tip
-        
+                
         tipLabel.text = String (format: "$%.2f", tip)
         totalLabel.text = String (format: "$%.2f", total)
 
@@ -199,7 +153,7 @@ class ViewController: UIViewController {
         
         if (!turnOn)
         {
-            UIView.animateWithDuration(2.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.2, options: animOption,
+            UIView.animateWithDuration(1.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseOut,
                 animations:
                 {
                     self.alphaModify(0)
@@ -207,8 +161,8 @@ class ViewController: UIViewController {
                 },
                 completion: {
                     (Bool) in
-                    self.billField.font = UIFont.systemFontOfSize(64);                    self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
-                    print("elements off")
+/*                    self.billField.font = UIFont.systemFontOfSize(64);                    self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
+*/                    print("elements off")
                     
             })
             
@@ -216,7 +170,7 @@ class ViewController: UIViewController {
         }
         else // make screen elements visible
         {
-            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.2, options: animOption,
+            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.7, options: animOption,
                 animations: {
                     
                     self.alphaModify(1)
@@ -225,9 +179,9 @@ class ViewController: UIViewController {
                 },
                 completion: {
                     (Bool) in
-                    self.billField.font = UIFont.systemFontOfSize(16);
+/*                    self.billField.font = UIFont.systemFontOfSize(16);
                     self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
-                   print("elements on")
+*/                   print("elements on")
             })
             
             normalSize = true
@@ -235,7 +189,18 @@ class ViewController: UIViewController {
         
     }
 
+    func leftSwoop()
+    {
+        tipLabel.center.x += view.bounds.width
+        totalLabel.center.x += view.bounds.width
+        tipControl.center.x += view.bounds.width
+        billText.center.x += view.bounds.width
+        tipText.center.x += view.bounds.width
+        totalText.center.x += view.bounds.width
+        barDivider.center.x += view.bounds.width
 
+    }
+    
     func alphaModify(newAlpha: CGFloat)
     {
         tipLabel.alpha = newAlpha
@@ -250,27 +215,23 @@ class ViewController: UIViewController {
     // control billField size
     func growBillField(grow: Bool)
     {
-        
+
         if (grow)
         {
             print("grow true")
             
-            billField.transform = CGAffineTransformScale(billField.transform, 4.0, 4.0)
-            
-            billField.frame = CGRect(x: 176, y: (79+30), width: 124, height: 60)
-            
+            billField.bounds.size = CGSize(width: 124, height: 60)
+                        
         }
         else
         {
             print("grow false")
             
-            billField.transform = CGAffineTransformScale(billField.transform, 0.25, 0.25)
-            
-            billField.frame = CGRect(x: 176, y: 79, width: 124, height: 30)
+            billField.bounds.size = CGSize(width: 124, height: 30)
             
         }
+
     }
 
-    
 }
 
