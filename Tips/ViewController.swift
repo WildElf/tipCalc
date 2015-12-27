@@ -31,7 +31,7 @@ class ViewController: UIViewController {
     // sets segmented control to unselected as a default
     var intValue = -1
     
-    var normalSize = true
+    var textVisible = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,12 @@ class ViewController: UIViewController {
         
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
+        
+        if (billField.text == "")
+        {
+            showLabels(false)
+            textVisible = false
+        }
 
     }
 
@@ -87,6 +93,18 @@ class ViewController: UIViewController {
     @IBAction func onEditingChanged(sender: AnyObject) {
         
         updateLabels()
+        
+        if (billField.text == "")
+        {
+            print("turn off screen elements")
+            activateScreenElements(false)
+        }
+        else if (!textVisible)
+        {
+            print("turn on screen elements")
+            activateScreenElements(true)
+        }
+        
 
     }
     
@@ -147,7 +165,6 @@ class ViewController: UIViewController {
     // screen animation control
     func activateScreenElements(turnOn: Bool)
     {
-        let animOption = UIViewAnimationOptions.CurveEaseIn
         
         print("animation call")
         
@@ -156,8 +173,7 @@ class ViewController: UIViewController {
             UIView.animateWithDuration(1.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseOut,
                 animations:
                 {
-                    self.alphaModify(0)
-                    self.growBillField(!turnOn)
+                    self.showLabels(false)
                 },
                 completion: {
                     (Bool) in
@@ -166,15 +182,14 @@ class ViewController: UIViewController {
                     
             })
             
-            normalSize = false
+            textVisible = false
         }
         else // make screen elements visible
         {
-            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.7, options: animOption,
+            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.7, options: .CurveEaseIn,
                 animations: {
                     
-                    self.alphaModify(1)
-                    self.growBillField(!turnOn)
+                    self.showLabels(true)
                     
                 },
                 completion: {
@@ -184,23 +199,32 @@ class ViewController: UIViewController {
 */                   print("elements on")
             })
             
-            normalSize = true
+            textVisible = true
         }
         
     }
 
-    func leftSwoop()
+    // animation control to enter from left
+    func showLabels(enter: Bool)
     {
-        tipLabel.center.x += view.bounds.width
-        totalLabel.center.x += view.bounds.width
-        tipControl.center.x += view.bounds.width
-        billText.center.x += view.bounds.width
-        tipText.center.x += view.bounds.width
-        totalText.center.x += view.bounds.width
-        barDivider.center.x += view.bounds.width
+        var move: CGFloat = -1
+        
+        if (enter)
+        {
+            move *= -1
+        }
+        
+        tipLabel.center.x += view.bounds.width * move
+        totalLabel.center.x += view.bounds.width * move
+        tipControl.center.x += view.bounds.width * move
+        billText.center.x += view.bounds.width * move
+        tipText.center.x += view.bounds.width * move
+        totalText.center.x += view.bounds.width * move
+        barDivider.center.x += view.bounds.width * move
 
     }
     
+    // for animation control of fade in and out
     func alphaModify(newAlpha: CGFloat)
     {
         tipLabel.alpha = newAlpha
@@ -212,7 +236,7 @@ class ViewController: UIViewController {
         barDivider.alpha = newAlpha
     }
     
-    // control billField size
+    // for animation control of billField size
     func growBillField(grow: Bool)
     {
 
@@ -221,7 +245,7 @@ class ViewController: UIViewController {
             print("grow true")
             
             billField.bounds.size = CGSize(width: 124, height: 60)
-                        
+            
         }
         else
         {
