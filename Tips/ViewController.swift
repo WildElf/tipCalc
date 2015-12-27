@@ -50,7 +50,7 @@ class ViewController: UIViewController {
         
         if (billField.text == "")
         {
-            showLabels(false)
+            quickHideLabels()
             textVisible = false
         }
 
@@ -170,57 +170,114 @@ class ViewController: UIViewController {
         
         if (!turnOn)
         {
-            UIView.animateWithDuration(1.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseOut,
+/*            UIView.animateWithDuration(1.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseOut,
                 animations:
                 {
-                    self.showLabels(false)
-                },
+*/                    self.showLabels(false)
+/*                },
                 completion: {
                     (Bool) in
-/*                    self.billField.font = UIFont.systemFontOfSize(64);                    self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
-*/                    print("elements off")
+                    self.billField.font = UIFont.systemFontOfSize(64);                    self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
+                    print("elements off")
                     
             })
-            
+ */
             textVisible = false
         }
         else // make screen elements visible
         {
-            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.7, options: .CurveEaseIn,
+/*            UIView.animateWithDuration(1.0, delay: 0.25, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.7, options: .CurveEaseIn,
                 animations: {
                     
-                    self.showLabels(true)
+*/                    self.showLabels(true)
                     
-                },
+/*                },
                 completion: {
                     (Bool) in
 /*                    self.billField.font = UIFont.systemFontOfSize(16);
                     self.billField.transform = CGAffineTransformScale(self.billField.transform, 1.0, 1.0)
 */                   print("elements on")
             })
-            
+*/
             textVisible = true
         }
         
     }
+    
+    func quickHideLabels()
+    {
+        self.billText.center.x -= self.view.bounds.width
+        self.tipText.center.x -= self.view.bounds.width
+        self.totalText.center.x -= self.view.bounds.width
+        self.tipLabel.center.x -= self.view.bounds.width
+        self.totalLabel.center.x -= self.view.bounds.width
+        self.barDivider.center.x -= self.view.bounds.width
+        self.tipControl.center.x -= self.view.bounds.width
+    }
 
-    // animation control to enter from left
+    // animation control to enter from left if true
     func showLabels(enter: Bool)
     {
-        var move: CGFloat = -1
-        
-        if (enter)
+        var move: CGFloat = 1
+        var shift: Double = 0.0
+    
+        if (!enter)
         {
             move *= -1
+            shift = Double(move)
         }
         
-        tipLabel.center.x += view.bounds.width * move
-        totalLabel.center.x += view.bounds.width * move
-        tipControl.center.x += view.bounds.width * move
-        billText.center.x += view.bounds.width * move
-        tipText.center.x += view.bounds.width * move
-        totalText.center.x += view.bounds.width * move
-        barDivider.center.x += view.bounds.width * move
+        
+        // *********
+        // Fixed text labels
+        //
+        UIView.animateWithDuration(0.6, delay: 0.1 + shift, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.4, options: .CurveEaseIn, animations: {
+            
+            self.billText.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
+        
+        UIView.animateWithDuration(0.6, delay: 0.2, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.4, options: .CurveEaseIn, animations: {
+            
+            self.tipText.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
+        
+        UIView.animateWithDuration(0.6, delay: 0.3, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.4, options: .CurveEaseIn, animations: {
+            
+            self.totalText.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
+        // *******
+        
+        // *******
+        // UI labels
+        UIView.animateWithDuration(0.5, delay: 0.6, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.4, options: .CurveEaseIn, animations: {
+            
+            self.tipLabel.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
+        
+        UIView.animateWithDuration(0.5, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.4, options: .CurveEaseIn, animations: {
+            
+            self.totalLabel.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
+        // *******
+        
+        // bar divider
+        UIView.animateWithDuration(0.4, delay: 0.8, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.3, options: .CurveEaseInOut, animations: {
+            
+            self.barDivider.center.x += self.view.bounds.width * move
+
+            }, completion: nil)
+        
+        // segmented control
+        UIView.animateWithDuration(1.2, delay: 0.9 + shift, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.2, options: .CurveEaseIn, animations: {
+            
+            self.tipControl.center.x += self.view.bounds.width * move
+            
+            }, completion: nil)
 
     }
     
