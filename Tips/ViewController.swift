@@ -29,6 +29,8 @@ class ViewController: UIViewController {
 
 	let defaults = NSUserDefaults.standardUserDefaults()
 	
+	let currency = NSNumberFormatter()
+	
 	// sets segmented control to unselected as a default
 	var intValue = -1
 	
@@ -47,8 +49,26 @@ class ViewController: UIViewController {
 			
 		}
 		
-		tipLabel.text = "$0.00"
-		totalLabel.text = "$0.00"
+		currency.numberStyle = NSNumberFormatterStyle.CurrencyStyle
+		currency.locale = NSLocale.currentLocale()
+		
+/*		for locale in NSLocale.availableLocaleIdentifiers()
+		{
+			currency.locale = NSLocale(localeIdentifier: locale)
+			if (currency.currencyCode != nil)
+			{
+				print("\(currency.currencyCode) =  \(currency.currencySymbol)")
+			}
+		}
+*/
+		print(currency.stringFromNumber(54321.12345))
+		print(NSLocale.preferredLanguages())
+		
+		print(currency.currencySymbol)
+		
+		tipLabel.text = currency.stringFromNumber(0.00)
+		totalLabel.text = currency.stringFromNumber(0.00)
+
 		
 		if (billField.text == "")
 		{
@@ -61,17 +81,14 @@ class ViewController: UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		print("Will appear")
-		
 		// loads default tip setting, if it has been set
 		if (defaults.objectForKey("default_tip") != nil) {
 			intValue = defaults.integerForKey("default_tip")
 			
-			print("Found default tip")
 			print(intValue)
 		}
 		
-		print(defaults.integerForKey("default_tip"))
+//		print(defaults.integerForKey("default_tip"))
 		
 		// uses the default value, using -1 if none exists
 		tipControl.selectedSegmentIndex = intValue
@@ -98,18 +115,15 @@ class ViewController: UIViewController {
 		
 		if (billField.text == "")
 		{
-			print("turn off screen elements")
 			activateScreenElements(false)
 		}
 		else if (!textVisible)
 		{
-			print("turn on screen elements")
 			activateScreenElements(true)
 		}
 		
 		
 	}
-	
 
 
 	// store the segment values/array in its own function
@@ -135,20 +149,20 @@ class ViewController: UIViewController {
 		
 		let billAmount = NSString(string: billField.text!).doubleValue
 		
-		print("billField: \(billField.text!)")
-		print("billAmount: \(billAmount)")
+//		print("billField: \(billField.text!)")
+//		print("billAmount: \(billAmount)")
 		
 		let tip = billAmount * tipPercent
 		let total = billAmount + tip
 		
-		tipLabel.text = String (format: "$%.2f", tip)
-		totalLabel.text = String (format: "$%.2f", total)
+		tipLabel.text = currency.stringFromNumber(tip)
+		totalLabel.text = currency.stringFromNumber(total)
 		
 		// store the latest bill entry for later
 		defaults.setValue(billField.text!, forKey: "recent_bill")
 		
 		defaults.synchronize()
-		
+
 	}
 	
 	// close the keyboard upon taking any part of the screen
@@ -156,24 +170,29 @@ class ViewController: UIViewController {
 		view.endEditing(true)
 	}
 	
+
+	// ******************
+	// Animation controls
+	// ******************
+
 	// screen animation control
 	func activateScreenElements(turnOn: Bool)
 	{
-		
-		print("animation call")
 		
 		if (!turnOn)
 		{
 			self.showLabels(false)
 			textVisible = false
 		}
-		else // make screen elements visible
+		else
 		{
 			self.showLabels(true)
 			textVisible = true
 		}
 		
 	}
+	
+	
 	
 	// hide UI elements without animations
 	func quickHideLabels()
@@ -186,6 +205,9 @@ class ViewController: UIViewController {
 		self.barDivider.center.x -= self.view.bounds.width
 		self.tipControl.center.x -= self.view.bounds.width
 	}
+	
+	
+	
 	
 	// animation control to enter from left if true
 	// exit to left if false
@@ -259,7 +281,7 @@ class ViewController: UIViewController {
 	
 	// $ prefix for billField
 	func makePrefix() {
-		let attributedString = NSMutableAttributedString(string: "$")
+		let attributedString = NSMutableAttributedString(string: currency.currencySymbol)
 		attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0,1))
 		
 		billField.attributedText = attributedString
