@@ -4,7 +4,7 @@
 
 Submitted by: **Eric Zim**
 
-Time spent: **12** hours spent in total
+Time spent: **22** hours spent in total
 
 ## User Stories
 
@@ -16,18 +16,18 @@ The following **required** functionality is complete:
 The following **optional** features are implemented:
 * [x] UI animations
 * [x] Remembering the bill amount across app restarts (if <10mins)
-* [ ] Using locale-specific currency and currency thousands separators.
+* [x] Using locale-specific currency and currency thousands separators.
 * [x] Making sure the keyboard is always visible and the bill amount is always the first responder. This way the user doesn't have to tap anywhere to use this app. Just launch the app and start typing.
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+* [x] Forgetting locale, resetting to device default, after a long period (> 1 week)
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<img src='tip_calc4.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='tip_calc5.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -39,6 +39,12 @@ Finding the function call to modify a UI segmented control from the program was
 rather tricky. Apple's documentation seemed bereft of any answers. Proposed solutions 
 that came up in searches from the past year didn't work. Finally, a discussion
 from 2009 came up with the right search terms that exposed the correct function call.
+
+Scaling text size seemed overly complex, so played with other animation tricks.
+
+Locale information finding was tricky, but I wanted to allow a big list of other countries. The enums are pretty hacky, but were managed with command-line text tools, which made implementation and updates easier than might appear.
+
+Locale and animation library research easily took the most time.
 
 ## License
 

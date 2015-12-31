@@ -26,10 +26,11 @@ class ViewController: UIViewController {
 	
 	@IBOutlet weak var barDivider: UIView!
 
-
 	let defaults = NSUserDefaults.standardUserDefaults()
 	
 	let currency = NSNumberFormatter()
+	
+	var thisLocale = ""
 	
 	// sets segmented control to unselected as a default
 	var intValue = -1
@@ -49,18 +50,14 @@ class ViewController: UIViewController {
 			
 		}
 		
-		currency.numberStyle = NSNumberFormatterStyle.CurrencyStyle
-		currency.locale = NSLocale.currentLocale()
-		
-/*		for locale in NSLocale.availableLocaleIdentifiers()
+		// set locale to phone default if app has not been used in over a week
+		if (NSDate().timeIntervalSinceDate(defaults.objectForKey("time_closed") as! NSDate) > 10080)
 		{
-			currency.locale = NSLocale(localeIdentifier: locale)
-			if (currency.currencyCode != nil)
-			{
-				print("\(currency.currencyCode) =  \(currency.currencySymbol)")
-			}
+			defaults.setValue(NSLocale.preferredLanguages()[0], forKey: "default_locale")
 		}
-*/
+		
+		updateLocale()
+		
 		print(currency.stringFromNumber(54321.12345))
 		print(NSLocale.preferredLanguages())
 		
@@ -143,7 +140,10 @@ class ViewController: UIViewController {
 	// function to use anytime data may have changed
 	func updateLabels()
 	{
-		
+		if (thisLocale != defaults.stringForKey("default_locale")!)
+		{
+			updateLocale()
+		}
 		// pass the segment control to the percentage func
 		let tipPercent = getTipPercentage(tipControl.selectedSegmentIndex)
 		
@@ -162,6 +162,24 @@ class ViewController: UIViewController {
 		defaults.setValue(billField.text!, forKey: "recent_bill")
 		
 		defaults.synchronize()
+
+	}
+	
+	// to be called from multiple locations
+	func updateLocale()
+	{
+		// check for locale setting
+		if (defaults.stringForKey("default_locale") == nil)
+		{
+			thisLocale = NSLocale.preferredLanguages()[0]
+		}
+		else
+		{
+			thisLocale = defaults.stringForKey("default_locale")!
+		}
+
+		currency.numberStyle = NSNumberFormatterStyle.CurrencyStyle
+		currency.locale = NSLocale(localeIdentifier: thisLocale)
 
 	}
 	

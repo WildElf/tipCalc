@@ -1,5 +1,5 @@
 .DS_[Ss]tore
 *.o
 *.out
-
+.txtfiles/
 xcuserdata/
